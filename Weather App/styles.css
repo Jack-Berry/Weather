@@ -1,0 +1,108 @@
+body {
+  background-color: rgb(61, 184, 255);
+  color: white;
+}
+.current {
+  position: relative;
+  top: 0;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.popBox {
+  height: 80%;
+  width: 200px;
+  background-color: rgb(36, 116, 162);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.popContainer {
+  position: relative;
+  height: 100%;
+  width: 50px;
+  border-radius: 10px;
+  background-color: white;
+}
+.popContainer p {
+  position: absolute;
+  color: black;
+  top: 38%;
+  left: 30%;
+}
+
+#popBar {
+  position: absolute;
+  height: 100%;
+  width: 50px;
+  background-color: rgb(70, 162, 223);
+  bottom: 0px;
+}
+.hourly,
+.daily {
+  height: 300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border: solid, 1px, white;
+  border-radius: 10px;
+  overflow-x: scroll;
+}
+.hourContainer {
+  display: none;
+  height: 60%;
+  width: 150px;
+  margin: 10px;
+  padding: 10px;
+  border: solid, 1px, white;
+  border-radius: 10px;
+}
+.dayContainer {
+  display: none;
+  position: relative;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 80%;
+  width: 150px;
+  margin: 10px;
+  border: solid, 1px, white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.dayContainer h2 {
+  font-size: 20px;
+}
+.dayContainer p {
+  display: none;
+  margin: auto;
+  position: absolute;
+  border-radius: 10px;
+  background-color: rgb(36, 116, 162);
+  padding-top: 100px;
+  padding-bottom: 103px;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  opacity: 90%;
+}
+
+@media (min-width: 1000px) {
+  .hourly,
+  .daily {
+    display: flex;
+  }
+  .hourContainer {
+    display: block;
+  }
+  .dayContainer {
+    display: flex;
+  }
+}
