@@ -7,16 +7,36 @@ function xx(thing) {
 
 navigator.geolocation.getCurrentPosition(success, error);
 
-function success(coords) {
-  const { latitude, longitude } = coords;
-  // getWeather(latitude, longitude);
-  var tempLatitude = 53.2483843;
-  var tempLongitude = -2.1186255;
-  getWeather(tempLatitude, tempLongitude);
+function success(data) {
+  const { latitude, longitude } = data.coords;
+  getWeather(latitude, longitude);
+  xx(longitude, latitude);
 }
 
 function error(error) {
   xx("Error", error);
+}
+
+// Handles button press and passes data
+function searchPressed(input, button) {
+  let search = input;
+  let _button = button;
+  _button.addEventListener("click", (e) => {
+    xx(search.value);
+    getSearch(search.value);
+  });
+}
+
+// Converts string to long-lat
+async function getSearch(place) {
+  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${place}&limit=1&appid=91463758243d44af0d8f7654ebd03f08`;
+  let result = await fetch(url);
+  result = await result.json();
+  let latitude = result[0].lat;
+  let longitude = result[0].lon;
+  let refresh = document.getElementById("root");
+  refresh.innerHTML = "";
+  getWeather(latitude, longitude);
 }
 
 // Make API Calls
@@ -51,6 +71,7 @@ function generateHTML(tag, content, bonus) {
     case "img":
       let img = document.createElement("img");
       img.src = content;
+      img.id = bonus;
       return img;
 
     case "div":
@@ -58,9 +79,20 @@ function generateHTML(tag, content, bonus) {
       div.id = content;
       div.className = bonus;
       return div;
+    case "input":
+      let input = document.createElement("input");
+      input.id = content;
+      input.placeholder = bonus;
+      return input;
+    case "button":
+      let button = document.createElement("button");
+      button.id = content;
+      button.innerText = bonus;
+      return button;
 
     default:
-      let text = document.createTextNode(content);
+      let caps = content.charAt(0).toUpperCase() + content.slice(1);
+      let text = document.createTextNode(caps);
       let elem = document.createElement(tag);
       elem.append(text);
 
@@ -90,11 +122,37 @@ function showWeather(result, locationRes) {
   let icon = result.current.weather[0].icon;
   appendHTML(
     "current",
-    generateHTML("img", `https://openweathermap.org/img/wn/${icon}@4x.png`)
+    generateHTML(
+      "img",
+      `https://openweathermap.org/img/wn/${icon}@4x.png`,
+      "currentIcon"
+    )
   );
+  bgColour(temp);
+
+  // Search location
+
+  appendHTML(
+    "current",
+    generateHTML("div", "searchContainer", "searchContainer")
+  );
+
+  appendHTML(
+    "searchContainer",
+    generateHTML("input", "search", " Search for location")
+  );
+
+  appendHTML(
+    "searchContainer",
+    generateHTML("button", "searchButton", "Search")
+  );
+  const input = document.getElementById("search");
+  const button = document.getElementById("searchButton");
+  searchPressed(input, button);
+
   // Hourly probability of precip
   appendHTML("current", generateHTML("div", "pop", "popBox"));
-  appendHTML("pop", generateHTML("p", "Chance of rain"));
+  appendHTML("pop", generateHTML("p", "Chance of rain (Hr)"));
   appendHTML("pop", generateHTML("div", "popContainer", "popContainer"));
   appendHTML("popContainer", generateHTML("div", "popBar"));
   appendHTML("popContainer", generateHTML("p", ""));
@@ -102,26 +160,67 @@ function showWeather(result, locationRes) {
 
   // HOURLY DIV
   appendHTML("root", generateHTML("div", "hourly", "hourly"));
+  appendHTML(
+    "hourly",
+    generateHTML("img", "right-arrow.png", "hourRightArrow")
+  );
+  appendHTML("hourly", generateHTML("img", "left-arrow.png", "hourLeftArrow"));
   appendHTML("hourly", generateHTML("h1", "Hourly Forecast"));
+  appendHTML("hourly", generateHTML("div", "hours", "hours"));
   // Hourly layout
-  hourly("hourly", result.hourly);
+  hourly("hours", result.hourly);
+  hourArrow("hourRightArrow", "hourLeftArrow", "hours");
 
   // DAILY DIV
   appendHTML("root", generateHTML("div", "daily", "daily"));
+  appendHTML("daily", generateHTML("img", "right-arrow.png", "dayRightArrow"));
+  appendHTML("daily", generateHTML("img", "left-arrow.png", "dayLeftArrow"));
   appendHTML("daily", generateHTML("h1", "Daily Forecast"));
+  appendHTML("daily", generateHTML("div", "days", "days"));
   // Day layout
-  daily("daily", result.daily);
+  daily("days", result.daily);
+  hourArrow("dayRightArrow", "dayLeftArrow", "days");
+}
+
+// Sets background colour of image vs
+function bgColour(data) {
+  let temp = data;
+  let bg = "";
+  if (temp >= 30) {
+    bg = "red";
+  } else if (temp >= 25) {
+    bg = "orange";
+  } else if (temp >= 20) {
+    bg = "DeepSkyBlue";
+  } else {
+    bg = "SlateGray";
+  }
+  let img = document.getElementById("currentIcon");
+  img.style.backgroundColor = bg;
 }
 
 // Controls the percipitation widgit
 function popFill(data) {
-  let percentage = data;
-  // let percentage = 30;
+  let percentage = data * 100;
+  // let percentage = 56;
   let container = document.getElementById("popBar");
   let text = document.querySelector(".popContainer p");
-  container.style.height = `${percentage}%`;
   text.innerText = `${percentage}%`;
+  if (percentage > 55) {
+    text.style.color = "white";
+  }
   container.style.bottom = "0";
+  // Animation (I know it's not using the loop really but it works!)
+  for (let counter = 0; counter < percentage; counter++) {
+    setTimeout(() => {
+      if (counter < percentage) {
+        container.style.height = `${counter}%`;
+      } else {
+        container.style.height = `${percentage}%`;
+        return;
+      }
+    }, 500);
+  }
 }
 
 function hourly(id, arr) {
@@ -137,10 +236,29 @@ function hourly(id, arr) {
         `hour${i}`,
         generateHTML("img", `https://openweathermap.org/img/wn/${icon}.png`)
       );
+      appendHTML(`hour${i}`, generateHTML("p", arr[i].weather[0].description));
+      let container = document.getElementById(`hour${i}`);
+      let text = document.querySelector(`#hour${i} p`);
+      dayHover(container, text);
+      borderColour(temp, `hour${i}`);
     } else {
       return;
     }
   }
+}
+function borderColour(data, id) {
+  // let temp = Math.round(data.current.temp - 273.15);
+  let temp = data;
+  let bg = "";
+  if (temp >= 30) {
+    bg = "red";
+  } else if (temp >= 25) {
+    bg = "orange";
+  } else {
+    bg = "white";
+  }
+  let div = document.getElementById(id);
+  div.style.borderColor = bg;
 }
 function daily(id, arr) {
   for (let i = 0; i < arr.length; i++) {
@@ -181,6 +299,7 @@ function daily(id, arr) {
       let container = document.getElementById(`day${i}`);
       let text = document.querySelector(`#day${i} p`);
       dayHover(container, text);
+      borderColour(maxTemp, `day${i}`);
     } else {
       return;
     }
@@ -188,10 +307,31 @@ function daily(id, arr) {
 }
 function dayHover(day, item) {
   day.addEventListener("mouseover", (e) => {
-    item.style.display = "block";
+    // item.style.display = "block";
+    item.style.opacity = "90%";
+    item.style.fontSize = "20px";
   });
   day.addEventListener("mouseleave", (e) => {
-    item.style.display = "none";
+    // item.style.display = "none";
+    item.style.opacity = "0%";
+    item.style.fontSize = "10px";
+  });
+}
+function hourArrow(rightArrow, leftArrow, div) {
+  let rArrow = document.getElementById(rightArrow);
+  rArrow.role = "button";
+  let lArrow = document.getElementById(leftArrow);
+  lArrow.role = "button";
+  let box = document.getElementById(div);
+  rArrow.addEventListener("click", (e) => {
+    box.scrollLeft += 700;
+    rArrow.style.display = "none";
+    lArrow.style.display = "block";
+  });
+  lArrow.addEventListener("click", (e) => {
+    box.scrollLeft -= 700;
+    lArrow.style.display = "none";
+    rArrow.style.display = "block";
   });
 }
 
