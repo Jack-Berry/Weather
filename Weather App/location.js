@@ -1,8 +1,8 @@
 const rootRef = document.getElementById("root");
 
 //lazy console log
-function xx(thing) {
-  console.log(thing);
+function xx(...thing) {
+  console.log(...thing);
 }
 
 navigator.geolocation.getCurrentPosition(success, error);
@@ -202,7 +202,7 @@ function bgColour(data) {
 // Controls the percipitation widgit
 function popFill(data) {
   let percentage = data * 100;
-  // let percentage = 56;
+  // let percentage = 100;
   let container = document.getElementById("popBar");
   let text = document.querySelector(".popContainer p");
   text.innerText = `${percentage}%`;
@@ -324,14 +324,10 @@ function hourArrow(rightArrow, leftArrow, div) {
   lArrow.role = "button";
   let box = document.getElementById(div);
   rArrow.addEventListener("click", (e) => {
-    box.scrollLeft += 700;
-    rArrow.style.display = "none";
-    lArrow.style.display = "block";
+    box.scrollLeft += 350;
   });
   lArrow.addEventListener("click", (e) => {
-    box.scrollLeft -= 700;
-    lArrow.style.display = "none";
-    rArrow.style.display = "block";
+    box.scrollLeft -= 350;
   });
 }
 

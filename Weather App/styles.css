@@ -1,12 +1,10 @@
 body {
   background-color: rgb(61, 184, 255);
-  /* background-color: rgb(159, 180, 199); */
   color: white;
   font-family: dosis, "Times New Roman", Times, serif;
 }
 .current {
   position: relative;
-  /* background-color: rgb(61, 184, 255); */
   top: 0;
   height: 300px;
   display: flex;
@@ -27,8 +25,9 @@ button {
 .popBox {
   height: 80%;
   width: 130px;
-  padding: 0;
+  /* padding-top: 3px; */
   background-color: rgb(36, 116, 162);
+  border: solid 3px white;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
@@ -44,7 +43,7 @@ button {
 
   height: 100%;
   width: 50px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   background-color: white;
 }
 .popContainer p {
@@ -59,6 +58,8 @@ button {
   position: absolute;
   height: 0;
   width: 100%;
+  /* border-radius: 10px; */
+  padding-top: 2px;
   background-color: rgb(70, 162, 223);
   bottom: 0px;
   transition: all 2000ms;
@@ -88,28 +89,28 @@ h1 {
 .hours,
 .days {
   margin-bottom: 10px;
-  width: 100%;
+  width: 515px;
   display: flex;
-  align-self: flex-start;
   height: 100%;
   flex-direction: row;
   justify-content: space-around;
   overflow-x: scroll;
   overflow-y: hidden;
+  scroll-behavior: smooth;
 }
 
 .hourContainer,
 .dayContainer {
   background-color: rgb(71, 178, 241);
-  height: 95%;
+  height: 97%;
   display: flex;
   position: relative;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   flex: 0 0 150px;
-  margin: 10px;
-  border: solid, 1px, white;
+  margin: 3px 10px;
+  border: solid, 2px, white;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -127,7 +128,6 @@ h1 {
 }
 #hourLeftArrow,
 #dayLeftArrow {
-  display: none;
   left: 30px;
 }
 
@@ -151,15 +151,27 @@ h1 {
   transition: all 1s;
 }
 
-@media (min-width: 850px) {
+@media (min-width: 800px) {
   .popBox {
     width: 200px;
   }
 
-  /* .hours,
+  .hours,
   .days {
-    width: 100%;
-  } */
+    width: 685px;
+  }
+}
+@media (min-width: 1000px) {
+  .hours,
+  .days {
+    width: 865px;
+  }
+}
+@media (min-width: 1200px) {
+  .hours,
+  .days {
+    width: 1050px;
+  }
 }
 @media (min-width: 1400px) {
   #hourRightArrow,
@@ -167,7 +179,9 @@ h1 {
   #dayRightArrow,
   #dayLeftArrow {
     display: none;
-    height: 50px;
-    width: 40px;
+  }
+  .hours,
+  .days {
+    width: 100%;
   }
 }
