@@ -1,5 +1,16 @@
 const rootRef = document.getElementById("root");
 
+import {
+  convertDate,
+  hourArrow,
+  dayHover,
+  bgColour,
+  borderColour,
+  popFill,
+} from "./domUtils.js";
+
+import { generateHTML, appendHTML } from "./buildStuff.js";
+
 //lazy console log
 function xx(...thing) {
   console.log(...thing);
@@ -57,54 +68,7 @@ async function getWeather(latitude, longitude) {
   showWeather(result, locationRes);
 }
 
-function generateHTML(tag, content, bonus) {
-  switch (tag) {
-    case "ul":
-      let ul = document.createElement("ul");
-      content.forEach((element) => {
-        let li = document.createElement("li");
-        let text = document.createTextNode(element);
-        li.append(text);
-        ul.append(li);
-      });
-      return ul;
-    case "img":
-      let img = document.createElement("img");
-      img.src = content;
-      img.id = bonus;
-      return img;
-
-    case "div":
-      let div = document.createElement("div");
-      div.id = content;
-      div.className = bonus;
-      return div;
-    case "input":
-      let input = document.createElement("input");
-      input.id = content;
-      input.placeholder = bonus;
-      return input;
-    case "button":
-      let button = document.createElement("button");
-      button.id = content;
-      button.innerText = bonus;
-      return button;
-
-    default:
-      let caps = content.charAt(0).toUpperCase() + content.slice(1);
-      let text = document.createTextNode(caps);
-      let elem = document.createElement(tag);
-      elem.append(text);
-
-      return elem;
-  }
-}
-
-function appendHTML(ID, data) {
-  let elem = document.getElementById(ID).append(data);
-  return elem;
-}
-
+// Uses the buildStuff.js funcs to generate the dom using the API data
 function showWeather(result, locationRes) {
   // CURRENT DIV
   appendHTML("root", generateHTML("div", "current", "current"));
@@ -182,47 +146,7 @@ function showWeather(result, locationRes) {
   hourArrow("dayRightArrow", "dayLeftArrow", "days");
 }
 
-// Sets background colour of image vs
-function bgColour(data) {
-  let temp = data;
-  let bg = "";
-  if (temp >= 30) {
-    bg = "red";
-  } else if (temp >= 25) {
-    bg = "orange";
-  } else if (temp >= 20) {
-    bg = "DeepSkyBlue";
-  } else {
-    bg = "SlateGray";
-  }
-  let img = document.getElementById("currentIcon");
-  img.style.backgroundColor = bg;
-}
-
-// Controls the percipitation widgit
-function popFill(data) {
-  let percentage = data * 100;
-  // let percentage = 100;
-  let container = document.getElementById("popBar");
-  let text = document.querySelector(".popContainer p");
-  text.innerText = `${percentage}%`;
-  if (percentage > 55) {
-    text.style.color = "white";
-  }
-  container.style.bottom = "0";
-  // Animation (I know it's not using the loop really but it works!)
-  for (let counter = 0; counter < percentage; counter++) {
-    setTimeout(() => {
-      if (counter < percentage) {
-        container.style.height = `${counter}%`;
-      } else {
-        container.style.height = `${percentage}%`;
-        return;
-      }
-    }, 500);
-  }
-}
-
+// Constructs hourly forecast
 function hourly(id, arr) {
   for (let i = 0; i < arr.length; i++) {
     if (i <= 6) {
@@ -246,20 +170,8 @@ function hourly(id, arr) {
     }
   }
 }
-function borderColour(data, id) {
-  // let temp = Math.round(data.current.temp - 273.15);
-  let temp = data;
-  let bg = "";
-  if (temp >= 30) {
-    bg = "red";
-  } else if (temp >= 25) {
-    bg = "orange";
-  } else {
-    bg = "white";
-  }
-  let div = document.getElementById(id);
-  div.style.borderColor = bg;
-}
+
+// Constucts daily forecast
 function daily(id, arr) {
   for (let i = 0; i < arr.length; i++) {
     if (i <= 7) {
@@ -304,35 +216,4 @@ function daily(id, arr) {
       return;
     }
   }
-}
-function dayHover(day, item) {
-  day.addEventListener("mouseover", (e) => {
-    // item.style.display = "block";
-    item.style.opacity = "90%";
-    item.style.fontSize = "20px";
-  });
-  day.addEventListener("mouseleave", (e) => {
-    // item.style.display = "none";
-    item.style.opacity = "0%";
-    item.style.fontSize = "10px";
-  });
-}
-function hourArrow(rightArrow, leftArrow, div) {
-  let rArrow = document.getElementById(rightArrow);
-  rArrow.role = "button";
-  let lArrow = document.getElementById(leftArrow);
-  lArrow.role = "button";
-  let box = document.getElementById(div);
-  rArrow.addEventListener("click", (e) => {
-    box.scrollLeft += 350;
-  });
-  lArrow.addEventListener("click", (e) => {
-    box.scrollLeft -= 350;
-  });
-}
-
-function convertDate(time) {
-  let unix = time;
-  let date = new Date(unix * 1000);
-  return date;
 }
