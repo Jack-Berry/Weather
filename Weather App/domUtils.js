@@ -23,11 +23,9 @@ export function hourArrow(rightArrow, leftArrow, div) {
 export function dayHover(day, item) {
   day.addEventListener("mouseover", (e) => {
     item.style.opacity = "90%";
-    item.style.fontSize = "20px";
   });
   day.addEventListener("mouseleave", (e) => {
     item.style.opacity = "0%";
-    item.style.fontSize = "10px";
   });
 }
 
@@ -85,4 +83,16 @@ export function popFill(data) {
       }
     }, 500);
   }
+}
+
+export function toastTime(place, message, time) {
+  let container = document.getElementById(place);
+  let elem = `<div class="toast" id="toast"><h1>Oh no!</h1><h2>${message}</h2></div>`;
+  document.querySelector(".toast");
+  container.insertAdjacentHTML("afterend", elem);
+  let item = document.getElementById("toast");
+  console.log(item);
+  setTimeout(() => {
+    item.remove();
+  }, time);
 }

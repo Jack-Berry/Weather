@@ -7,6 +7,112 @@ body {
   width: 90%;
   margin: 0 5%;
 }
+
+.lds-ellipsis,
+.lds-ellipsis div {
+  box-sizing: border-box;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33.33333px;
+  width: 13.33333px;
+  height: 13.33333px;
+  border-radius: 20%;
+  background: currentColor;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+.toast {
+  position: fixed;
+  margin: 0;
+  transform: translateX(-50%);
+
+  top: 10%;
+  height: 150px;
+  width: 300px;
+  background-color: rgb(71, 178, 241);
+  border: dotted 3px rgb(247, 232, 96);
+  border-radius: 10px;
+  text-align: center;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+.toast h1 {
+  color: rgb(250, 98, 98);
+}
+
 .current {
   position: relative;
   top: 0;
@@ -28,13 +134,15 @@ button {
 .current img {
   border-radius: 35%;
   border: solid 2px white;
+  height: 150px;
+  width: 150px;
 }
 .popBox {
   height: 80%;
-  width: 130px;
+  width: 50px;
   padding-top: 3px;
   background-color: rgb(36, 116, 162);
-  border: solid 3px white;
+  border: solid 1px white;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
@@ -44,12 +152,13 @@ button {
 }
 .popBox > p {
   width: 50px;
+  display: none;
 }
 .popContainer {
   position: relative;
 
   height: 100%;
-  width: 50px;
+  width: 30px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   background-color: white;
@@ -66,7 +175,8 @@ button {
   position: absolute;
   height: 0;
   width: 100%;
-  /* border-radius: 10px; */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   padding-top: 2px;
   background-color: rgb(70, 162, 223);
   bottom: 0px;
@@ -98,12 +208,13 @@ h1 {
 .days {
   position: relative;
   margin-bottom: 10px;
-  width: 515px;
+  width: 345px;
+  /* width: 100%; */
   display: flex;
   height: 100%;
   flex-direction: row;
   justify-content: space-around;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   scroll-behavior: smooth;
 }
@@ -133,11 +244,11 @@ h1 {
 }
 #hourRightArrow,
 #dayRightArrow {
-  right: 75px;
+  right: 8%;
 }
 #hourLeftArrow,
 #dayLeftArrow {
-  left: 75px;
+  left: 8%;
 }
 
 .dayContainer h2 {
@@ -156,8 +267,29 @@ h1 {
   text-align: center;
   vertical-align: middle;
   opacity: 0%;
-  font-size: 10px;
-  transition: all 300ms;
+  font-size: 20px;
+  transition: all 500ms;
+}
+@media (min-width: 600px) {
+  .hours,
+  .days {
+    width: 515px;
+  }
+  .current img {
+    height: 204px;
+    width: 204px;
+  }
+  .popBox > p {
+    width: 50px;
+    display: inherit;
+  }
+  .popBox {
+    width: 130px;
+    border: solid 3px white;
+  }
+  .popContainer {
+    width: 50px;
+  }
 }
 
 @media (min-width: 850px) {
@@ -171,28 +303,12 @@ h1 {
   }
 }
 @media (min-width: 1050px) {
-  #hourRightArrow,
-  #dayRightArrow {
-    right: 85px;
-  }
-  #hourLeftArrow,
-  #dayLeftArrow {
-    left: 85px;
-  }
   .hours,
   .days {
     width: 865px;
   }
 }
 @media (min-width: 1200px) {
-  #hourRightArrow,
-  #dayRightArrow {
-    right: 95px;
-  }
-  #hourLeftArrow,
-  #dayLeftArrow {
-    left: 95px;
-  }
   .hours,
   .days {
     width: 1050px;
@@ -206,14 +322,6 @@ h1 {
   #hourRightArrow,
   #hourLeftArrow {
     display: none;
-  }
-
-  #dayRightArrow {
-    right: 110px;
-  }
-
-  #dayLeftArrow {
-    left: 110px;
   }
 }
 @media (min-width: 1800px) {
