@@ -74,7 +74,7 @@ body {
 .toast {
   position: fixed;
   margin: 0;
-  transform: translateX(-50%);
+  /* transform: translateX(-50%); */
 
   top: 10%;
   height: 150px;

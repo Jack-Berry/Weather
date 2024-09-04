@@ -75,7 +75,7 @@ function searchPressed(input) {
 // Converts string to long-lat
 async function getSearch(place) {
   try {
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${place}&limit=1&appid=91463758243d44af0d8f7654ebd03f08`;
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${place}&limit=1&appid=91463758243d44af0d8f7654ebd03f08`;
     let result = await fetch(url);
     result = await result.json();
     let latitude = result[0].lat;
@@ -101,7 +101,7 @@ async function getWeather(latitude, longitude) {
     xx(result);
 
     // Geo API
-    const locationURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=91463758243d44af0d8f7654ebd03f08`;
+    const locationURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=91463758243d44af0d8f7654ebd03f08`;
     // Geo data
     let locationRes = await fetch(locationURL);
     locationRes = await locationRes.json();
